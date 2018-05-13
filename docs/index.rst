@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to ENS's documentation!
+Welcome to WNS's documentation!
 ===============================
 
 .. toctree::
@@ -15,8 +15,6 @@ Welcome to ENS's documentation!
    userguide
    implementers
    deploying
-   dns
-   faq
 
 
 This document is licensed under the @emph{Creative Commons Attribution License}. To

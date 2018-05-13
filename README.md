@@ -1,36 +1,32 @@
-# ENS
+# WNS
 
-[![Build Status](https://travis-ci.org/ensdomains/ens.svg?branch=master)](https://travis-ci.org/ensdomains/ens)
 
-Implementations for registrars and local resolvers for the Ethereum Name Service.
+Implementations for registrars and local resolvers for the Wanchain Name Service.
 
-For documentation of the ENS system, see [docs.ens.domains](https://docs.ens.domains/).
+For documentation of the WNS system, see [doc](https://github.com/wanchain/wns/tree/master/docs).
 
 To run unit tests, clone this repository, and run:
 
     $ npm install
     $ npm test
 
-## ENSRegistry.sol
-Implementation of the ENS Registry, the central contract used to look up resolvers and owners for domains.
+## WNSRegistry.sol
+Implementation of the WNS Registry, the central contract used to look up resolvers and owners for domains.
 
 ## FIFSRegistrar.sol
 Implementation of a simple first-in-first-served registrar, which issues (sub-)domains to the first account to request them.
 
-## HashRegistrar.sol
-Implementation of a registrar based on second-price blind auctions and funds held on deposit, with a renewal process that weights renewal costs according to the change in mean price of registering a domain. Largely untested!
-
-## HashRegistrarSimplified.sol
-Simplified version of the above, with no support for renewals. This is the current proposal for interim registrar of the ENS system until a permanent registrar is decided on.
+## Registrar.sol
+Simplified version of the above, with no support for renewals. This is the current proposal for interim registrar of the WNS system until a permanent registrar is decided on.
 
 ## PublicResolver.sol
 Simple resolver implementation that allows the owner of any domain to configure how its name should resolve. One deployment of this contract allows any number of people to use it, by setting it as their resolver in the registry.
 
-# ENS Registry interface
+# WNS Registry interface
 
-The ENS registry is a single central contract that provides a mapping from domain names to owners and resolvers, as described in [EIP 137](https://github.com/ethereum/EIPs/issues/137).
+The WNS registry is a single central contract that provides a mapping from domain names to owners and resolvers.
 
-The ENS operates on 'nodes' instead of human-readable names; a human readable name is converted to a node using the namehash algorithm, which is as follows:
+The WNS operates on 'nodes' instead of human-readable names; a human readable name is converted to a node using the namehash algorithm, which is as follows:
 
 	def namehash(name):
 	  if name == '':
@@ -62,7 +58,7 @@ Resolvers must implement one mandatory method, `has`, and may implement any numb
 
 ## has(bytes32 node, bytes32 kind) constant returns (bool)
 
-Returns true iff the specified node has the specified record kind available. Record kinds are defined by each resolver type and standardised in EIPs; currently only "addr" is supported.
+Returns true if the specified node has the specified record kind available. Record kinds are defined by each resolver type .
 
 `has()` must return false iff the corresponding record type specific methods will throw if called.
 
@@ -70,24 +66,15 @@ Returns true iff the specified node has the specified record kind available. Rec
 
 Implements the addr resource type. Returns the Ethereum address associated with a node if it exists, or `throw`s if it does not.
 
-# Generating LLL ABI and binary data
-
-ENS.lll.bin was generated with the following command, using the lllc packaged with Solidity 0.4.4:
-
-    $ lllc ENS.lll > ENS.lll.bin
-
-The files in the abi directory were generated with the following command:
-
-    $ solc --abi -o abi AbstractENS.sol FIFSRegistrar.sol HashRegistrarSimplified.sol PublicResolver.sol
 
 # Getting started
 Install Truffle
 
-	$ npm install -g truffle
+	$ npm install -g ganache-cli
 
 Launch the RPC client, for example TestRPC:
 
-	$ testrpc
+	$ ganache-cli
 
 Deploy `ENS` and `FIFSRegistrar` to the private network, the deployment process is defined at [here](migrations/2_deploy_contracts.js):
 
@@ -96,5 +83,20 @@ Deploy `ENS` and `FIFSRegistrar` to the private network, the deployment process 
 alternatively, deploy the `HashRegistrar`:
 
 	$ truffle migrate --network dev.auction
+
+Testing all contract by TestRPC:
+
+    $ truffle test
+
+If you want test on testnet, remove all test file except TestIntegrate.js under test directory,
+Then create four account,and deposit the accounts, and unlock them:
+
+    $ personal.unlockAccount(eth.accounts[0], 'yourpasswd', 999999);
+    $ personal.unlockAccount(eth.accounts[0], 'yourpasswd', 999999);
+    $ personal.unlockAccount(eth.accounts[0], 'yourpasswd', 999999);
+    $ personal.unlockAccount(eth.accounts[0], 'yourpasswd', 999999);
+
+make a simple integate test on wanchain testnet:
+    $ truffle test --network testnet
 
 Check the truffle [documentation](http://truffleframework.com/docs/) for more information.
